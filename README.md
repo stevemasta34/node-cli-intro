@@ -79,5 +79,6 @@ Create a NodeJS CLI tool to release a project. The release process should:
 ├── .eslintrc
 ├── .editorconfig
 ├── .gitignore
-└── package.json
+├── package.json
+└── README.md
 ```
