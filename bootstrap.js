@@ -1,4 +1,3 @@
-
 var System = require('es6-module-loader').System;
 
 System.import('./src/index.js').then(function(index) {
