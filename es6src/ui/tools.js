@@ -26,7 +26,7 @@ module.exports = (function () {
 	print: function (obj, strColor) {
 	    console.log(obj.toString()[strColor]);
 	},
-	usage,
+	usage: usage,
 	help: options.help
     }
 })();
