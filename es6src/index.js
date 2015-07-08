@@ -1,4 +1,11 @@
 // node-cli-intro/src/index.js
-module.exports = function () {
+
+import {readFile, readdir} from "fs";
+
+function myMethod () {
     console.log("This is how we do it.");
+    fs.readFile("./");
+    fs.readdir("./");
 }
+
+// semVer bump
