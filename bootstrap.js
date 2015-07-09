@@ -1,11 +1,10 @@
 #! /usr/bin/env node
-
-// var colors = require('colors');
 "use strict";
 
 var _srcUiTools = require("./src/ui/tools");
 
-/* main entry point */
+var _srcIo = require("./src/io");
+
 function main() {
    // the module command-line-args demand the process.argv Array be uptampered.
    // So I am forced into using all the functionality it supplies.
@@ -17,6 +16,7 @@ function main() {
       for (var k in options) {
          (0, _srcUiTools.print)(options[k], "green");
       }
+      (0, _srcIo.bumpVersion)("./package.json");
    }
 }
 

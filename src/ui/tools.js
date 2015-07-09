@@ -14,8 +14,8 @@ var cli = cliArgs([{ name: 'verbose', type: Boolean, alias: 'v', description: 'O
 exports.cli = cli;
 /* generate a usage guide */
 var usage = cli.getUsage({
-    header: 'A synopsis application.',
-    footer: 'For more information, visit http://example.com'
+    header: '.',
+    footer: 'For more, http://github.com/stevemasta34/es-new-to-current'
 });
 
 exports.usage = usage;
@@ -23,5 +23,9 @@ exports.usage = usage;
 // var options = cli.parse();
 
 function print(obj, strColor) {
-    console.log(obj.toString()[strColor]);
+    if (strColor) {
+        console.log(obj.toString()[strColor]);
+    } else {
+        console.log(obj.toString());
+    }
 }

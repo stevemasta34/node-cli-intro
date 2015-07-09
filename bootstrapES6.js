@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 import { usage, cli, print } from "./src/ui/tools";
-import {} from "./src/";
+import { bumpVersion } from "./src/io";
 
 function main () {
     // the module command-line-args demand the process.argv Array be uptampered.
@@ -10,11 +10,11 @@ function main () {
     print("testprint", "cyan");
     if(options.help) { 
 	print(usage, "blue");
-    }
-    else {
+    } else {
 	for(var k in options) {
 	    print(options[k], "green");
 	}
+	bumpVersion("./package.json");
     }
 }
 
