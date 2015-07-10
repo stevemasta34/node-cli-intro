@@ -66,7 +66,7 @@ function commitChangesLocally(commitMessage) {
     console.log("Commit message: ",commitMessage);
 
     try {
-	exec(`git commit -a -m "${commitMessage}"`);
+	exec(`git commit -a -q -m "${commitMessage}"`);
     } catch (e) {
 	console.error("Error occured at 'commitChangesLocally'", e);
     }

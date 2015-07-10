@@ -9,13 +9,14 @@ function main() {
 			// the module command-line-args demand the process.argv Array be uptampered.
 			// So I am forced into using all the functionality it supplies.
 			var options = _srcUiTools.cli.parse();
-			(0, _srcUiTools.print)("testprint", "cyan");
+			// print("testprint", "cyan");
 			if (options.help) {
 						(0, _srcUiTools.print)(_srcUiTools.usage, "blue");
 			} else {
-						for (var k in options) {
-									(0, _srcUiTools.print)(options[k], "green");
-						}
+						/*
+      for(var k in options) {
+      print(options[k], "green");
+      } */
 						// bumpVersion("./package.json");
 						// this will be migrated to index.js
 						if (options.commit) {
