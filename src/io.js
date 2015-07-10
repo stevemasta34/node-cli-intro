@@ -8,8 +8,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.bumpVersion = bumpVersion;
+exports.commit = commit;
 
 var _fs = require("fs");
+
+var _shelljs = require("shelljs");
 
 // bump the package version (assumed to be [currentval] + 0.1.0
 
@@ -17,6 +20,16 @@ function bumpVersion(path) {
 	console.log("Got to the bump call");
 	bumpPackageVersion(path);
 }
+
+;
+
+function commit(message) {
+	// commit the project
+	// optional message
+	commitChangesLocally(message ? message : "Automated commit from node-bump-piler");
+}
+
+;
 
 function bumpPackageVersion(pathToPackageJSON) {
 	var readData;
@@ -60,7 +73,12 @@ function bumpPackageVersion(pathToPackageJSON) {
 	});
 }
 
-// commit changes to local repo
+function commitChangesLocally(commitMessage) {
+	// commit changes to local repo
+	console.log("Commit message: ", commitMessage);
+
+	(0, _shelljs.exec)("git commit -a -m \"" + commitMessage + "\"");
+}
 
 // add version tags
 
