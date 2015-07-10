@@ -64,8 +64,12 @@ function bumpPackageVersion(pathToPackageJSON) {
 function commitChangesLocally(commitMessage) {
     // commit changes to local repo
     console.log("Commit message: ",commitMessage);
-    
-    exec(`git commit -a -m "${commitMessage}"`);
+
+    try {
+	exec(`git commit -a -m "${commitMessage}"`);
+    } catch (e) {
+	console.error("Error occured at 'commitChangesLocally'", e);
+    }
 }
 
 // add version tags
