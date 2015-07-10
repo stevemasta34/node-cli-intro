@@ -25,10 +25,14 @@ exports.usage = usage;
 // var options = cli.parse();
 
 function print(obj, strColor) {
-    if (strColor) {
-        console.log(obj.toString()[strColor]);
-    } else {
-        console.log(obj.toString());
+    try {
+        if (strColor) {
+            console.log(obj.toString()[strColor]);
+        } else {
+            console.log(obj.toString());
+        }
+    } catch (e) {
+        console.error('Object was most likely null: ', e);
     }
 }
 

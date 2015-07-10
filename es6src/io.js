@@ -68,9 +68,6 @@ function commitChangesLocally(commitMessage) {
     exec(`git commit -a -m "${commitMessage}"`);
 }
 
-
-
-
 // add version tags
 
 //push git tags to remote repository
