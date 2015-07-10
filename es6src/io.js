@@ -5,9 +5,9 @@ import { open, writeFile, readFile } from "fs";
 import { exec } from "shelljs";
 
 // bump the package version (assumed to be [currentval] + 0.1.0
-export function bumpVersion(path) {
-    console.log("Got to the bump call");
-    bumpPackageVersion(path);
+export function bumpVersion(path, releaseType) {
+    console.log("Got to the bump call:", releaseType);
+    bumpPackageVersion(path, releaseType);
 };
 
 export function commit(message) {
@@ -16,7 +16,7 @@ export function commit(message) {
     commitChangesLocally(message ? message : "Automated commit from node-bump-piler");
 };
 
-function bumpPackageVersion(pathToPackageJSON) {
+function bumpPackageVersion(pathToPackageJSON, bumpType) {
     var readData;
     // read in the file
     readFile(pathToPackageJSON, { "encoding": "utf8"}, function (err, data) {
@@ -36,12 +36,13 @@ function bumpPackageVersion(pathToPackageJSON) {
             // JSON.destringify (or some equivalent), so we get the object back
 	    var verNum = myObj["version"];
 	    var split = verNum.split('.');
-	    var theInt = Number(split[1]);
-	    console.log("Parsed this as the version num:", theInt);
+	    var splitInd = (bumpType === "major" ? 0 : bumpType === "minor" ? 1 : 2);
+	    var theInt = Number(split[ splitInd ]);
+	    console.log("Parsed this as the current",bumpType,"version num:", theInt);
 
 	    // bump the int
 	    theInt += 1;
-	    split[1] = theInt;
+	    split[splitInd] = theInt;
 	    console.log(split);
 
 	    // tick the property of the object
@@ -51,7 +52,7 @@ function bumpPackageVersion(pathToPackageJSON) {
 
             // write to the file
 	    writeFile("./babel-es5-src/package.json",
-		      JSON.stringify(myObj), function (err) {
+		      JSON.stringify(myObj, null, 4), function (err) {
 		if (err) console.error(err);
 
 		console.log("Write was successful");

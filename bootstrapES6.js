@@ -2,6 +2,7 @@
 
 import { usage, cli, print } from "./src/ui/tools";
 import { bumpVersion, commit } from "./src/io";
+import { run } from "./src/index";
 
 function main () {
     // the module command-line-args demand the process.argv Array be uptampered.
@@ -13,12 +14,26 @@ function main () {
     } else { /*
 	for(var k in options) {
 	    print(options[k], "green");
+
 	} */
-	// bumpVersion("./package.json");
 	// this will be migrated to index.js
+	print(options, "cyan")
+	// This could be done with string parsing, but that can be error pron
+	// and this is a definite thing that will reduce operation count
+	if (options["bump-major"] !== undefined) {
+	    // pass the major key to the bump command
+	    bumpVersion("./package.json", "major");
+	} else if (options["bump-minor"] !== undefined) {
+	    // pass the minor key to the bump command
+	    bumpVersion("./package.json", "minor");
+	} else {
+	    // pass the patch key to the bump command
+	    bumpVersion("./package.json", "patch");
+	}
 	if (options.commit){
 	    commit(options.message);
 	}
+	
     }
 }
 
