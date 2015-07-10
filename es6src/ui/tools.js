@@ -6,7 +6,10 @@ var colors = require('colors');
 export var cli = cliArgs([
     { name: "verbose", type: Boolean, alias: "v", description: "Output operations to console"},
     { name: "help", type: Boolean, alias: "h", description: "Print usage instructions" },
-    { name: "files", type: Array, defaultOption: true, description: "The input files" }
+//    { name: "files", type: Array, defaultOption: true, description: "The input files" },
+    { name: "bump", type: Boolean, alias: "b", description: "Perform a 'patch' version bump" },
+    { name: "bump-major", type: Boolean, alias: "", description "Perform a 'major' version bump" },
+    { name: "bump-minor", type: Boolean, alias: "", description "Perofrm a 'minor' version bump" }
 ]);
 
 /* generate a usage guide */
