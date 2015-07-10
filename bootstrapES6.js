@@ -17,7 +17,7 @@ function main () {
 	// bumpVersion("./package.json");
 	// this will be migrated to index.js
 	if (options.commit){
-	    commit(/*"test"*/);
+	    commit(options.message);
 	}
     }
 }

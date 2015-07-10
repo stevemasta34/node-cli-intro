@@ -19,10 +19,9 @@ function main() {
 						// bumpVersion("./package.json");
 						// this will be migrated to index.js
 						if (options.commit) {
-									(0, _srcIo.commit)();
+									(0, _srcIo.commit)(options.message);
 						}
 			}
 }
 
 main();
-/*"test"*/
