@@ -17,7 +17,7 @@ function main () {
 
 	} */
 	// this will be migrated to index.js
-	print(options, "cyan")
+	print(options, "cyan");
 	// This could be done with string parsing, but that can be error pron
 	// and this is a definite thing that will reduce operation count
 	if (options["bump-major"] !== undefined) {
