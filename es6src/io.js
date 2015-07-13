@@ -8,8 +8,13 @@ import { exec, echo, exit } from "shelljs";
 
 // bump the package version (assumed to be [currentval] + 0.1.0
 export function bumpVersion(path, releaseType, callback) {
-    console.log("Got to the bump call:", releaseType);
-    bumpPackageVersion(path, releaseType, callback);
+    console.log("\nGot to the bump call:", releaseType);
+    try {
+	let ret = bumpPackageVersion(path, releaseType);
+	callback(ret.error ? null : ret.error, ret.data);
+    } catch (e) {
+	callback(e);
+    }
 };
 
 export function commit(message, callback) {

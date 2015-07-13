@@ -22,7 +22,12 @@ var _shelljs = require("shelljs");
 
 function bumpVersion(path, releaseType, callback) {
 				console.log("Got to the bump call:", releaseType);
-				bumpPackageVersion(path, releaseType, callback);
+				try {
+								var ret = bumpPackageVersion(path, releaseType);
+								callback(ret.error ? null : ret.error, ret.data);
+				} catch (e) {
+								callback(e);
+				}
 }
 
 ;
