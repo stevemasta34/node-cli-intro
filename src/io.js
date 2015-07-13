@@ -73,8 +73,6 @@ function bumpPackageVersion(pathToPackageJSON, bumpType) {
 																readData = data;
 																console.log(readData);
 
-																// console.log(data);
-																// transform the contents to an string
 																var myObj = JSON.parse(data);
 
 																// JSON.destringify (or some equivalent), so we get the object back
@@ -96,15 +94,16 @@ function bumpPackageVersion(pathToPackageJSON, bumpType) {
 
 																var ret = {};
 																// write to the file
-																(0, _fs.writeFile)("./babel-es5-src/package.json", JSON.stringify(myObj, null, 4), function (err) {
+																(0, _fs.writeFile)("./package.json", JSON.stringify(myObj, null, 4), function (err) {
 																				if (err) {
 																								console.error(err);
 																								ret.error = err;
+																				} else {
+																								console.log("Write was successful");
+																								ret.successful = true;
+																								ret.data = readData;
 																				}
-																				console.log("Write was successful");
-																				ret.successful = true;
 																});
-																ret.data = readData;
 																return {
 																				v: ret
 																};
