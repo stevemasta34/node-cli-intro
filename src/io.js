@@ -21,7 +21,7 @@ var _shelljs = require("shelljs");
 // bump the package version (assumed to be [currentval] + 0.1.0
 
 function bumpVersion(path, releaseType, callback) {
-				console.log("Got to the bump call:", releaseType);
+				console.log("\nGot to the bump call:", releaseType);
 				try {
 								var ret = bumpPackageVersion(path, releaseType);
 								callback(ret.error ? null : ret.error, ret.data);
