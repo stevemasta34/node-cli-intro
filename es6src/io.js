@@ -9,23 +9,23 @@ import { exec, echo, exit } from "shelljs";
 // bump the package version (assumed to be [currentval] + 0.1.0
 export function bumpVersion(path, releaseType, callback) {
     console.log("Got to the bump call:", releaseType);
-    let ret = bumpPackageVersion(path, releaseType);
-    callback(ret.error, ret.ver);
+    bumpPackageVersion(path, releaseType, callback);
 };
 
 export function commit(message, callback) {
     // commit the project
     // optional message
     try {
-	commitChangesLocally(message ? message : "Automated commit from bump-tool");
+	let res = commitChangesLocally(
+	    message ? message : "Automated commit from bump-tool");
 	
-	return callback(null);
+	return callback(res.error, res.data);
     } catch (error) {
 	return callback(error);
     }
 };
 
-export function tag() {
+export function tag(callback) {
 };
 
 export function pushTags(callback) {
@@ -38,7 +38,7 @@ export function pushTags(callback) {
 
 
 function bumpPackageVersion(pathToPackageJSON, bumpType) {
-    var readData;
+    let readData;
     // read in the file
     readFile(pathToPackageJSON, { "encoding": "utf8"}, function (err, data) {
 	if (err) {
@@ -52,13 +52,13 @@ function bumpPackageVersion(pathToPackageJSON, bumpType) {
 	    
 	    // console.log(data);
 	    // transform the contents to an string
-	    var myObj = JSON.parse(data);
+	    let myObj = JSON.parse(data);
 
             // JSON.destringify (or some equivalent), so we get the object back
-	    var verNum = myObj["version"];
-	    var split = verNum.split('.');
-	    var splitInd = (bumpType === "major" ? 0 : bumpType === "minor" ? 1 : 2);
-	    var theInt = Number(split[ splitInd ]);
+	    let verNum = myObj["version"];
+	    let split = verNum.split('.');
+	    let splitInd = (bumpType === "major" ? 0 : bumpType === "minor" ? 1 : 2);
+	    let theInt = Number(split[ splitInd ]);
 	    console.log("Parsed this as the current",bumpType,"version num:", theInt);
 
 	    // bump the int
@@ -67,38 +67,44 @@ function bumpPackageVersion(pathToPackageJSON, bumpType) {
 	    console.log(split);
 
 	    // tick the property of the object
-	    var newVer = split.join(".");
+	    let newVer = split.join(".");
 	    console.log("New version: ",newVer);
 	    myObj["version"] = newVer;
 
+	    let ret = {};
             // write to the file
 	    writeFile("./babel-es5-src/package.json",
 		      JSON.stringify(myObj, null, 4), function (err) {
 			  if (err) {
-			      return console.error(err);
+			      console.error(err);
+			      ret.error = err;
 			  }
-			  return console.log("Write was successful");
+			  console.log("Write was successful");
+			  ret.successful = true;
 		      });
-	    return { ver: newVer, error: null };
+	    ret.data = readData;
+	    return ret;
 	}	
     });
 }
 
 function commitChangesLocally(commitMessage) {
     // commit changes to local repo
+    let res = {};
     console.log("Commit message: ",commitMessage);
-
     try {
 	if (exec(`git commit -a -m "${commitMessage}"`).code !== 0) {
 	    let message = "Shelljs failed to execute the Git commit.";
 	    echo(message);
 	    exit(1);
-	    return {error: message};
+	    res.error = message;
 	}
+	res.data = true;
+	return res;
     } catch (e) {
-	console.error("Error occured at 'commitChangesLocally'", e);
+	return console.error("Error occured at 'commitChangesLocally'", e);
     }
-}
+};
 
 // add version tags
 

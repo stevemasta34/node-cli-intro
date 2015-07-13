@@ -20,23 +20,23 @@ function main() {
   print(options[k], "green");
   } */
 		// this will be migrated to index.js
-		// bumpVersion("./package.json";)
-		if (options.bump || options["bump-minor"] || options["bump-major"]) {
-			// This could be done with string parsing, but that can be error pron
-			// and this is a definite thing that will reduce operation count
-			if (options["bump-major"]) {
-				// pass the major key to the bump command
-				(0, _srcIo.bumpVersion)("./package.json", "major");
-			} else if (options["bump-minor"]) {
-				// pass the minor key to the bump command
-				(0, _srcIo.bumpVersion)("./package.json", "minor");
-			} else {
-				// pass the default key to bump command
-				(0, _srcIo.bumpVersion)("./package.json", "default");
-			}
+		(0, _srcUiTools.print)(options, "cyan");
+		// This could be done with string parsing, but that can be error pron
+		// and this is a definite thing that will reduce operation count
+		if (options["bump-major"]) {
+			// pass the major key to the bump command
+			(0, _srcIo.bumpVersion)("./package.json", "major");
+		} else if (options["bump-minor"]) {
+			// pass the minor key to the bump command
+			(0, _srcIo.bumpVersion)("./package.json", "minor");
+		} else {
+			// pass the patch key to the bump command
+			(0, _srcIo.bumpVersion)("./package.json", "patch");
 		}
 		if (options.commit) {
-			(0, _srcIo.commit)(options.message);
+			(0, _srcIo.commit)(options.message, function (error, dat) {
+				(0, _srcUiTools.print)("The data thing: {dat}", "blue");
+			});
 		}
 	}
 }

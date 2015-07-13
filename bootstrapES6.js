@@ -20,10 +20,10 @@ function main () {
 	print(options, "cyan");
 	// This could be done with string parsing, but that can be error pron
 	// and this is a definite thing that will reduce operation count
-	if (options["bump-major"] !== undefined) {
+	if (options["bump-major"]) {
 	    // pass the major key to the bump command
 	    bumpVersion("./package.json", "major");
-	} else if (options["bump-minor"] !== undefined) {
+	} else if (options["bump-minor"]) {
 	    // pass the minor key to the bump command
 	    bumpVersion("./package.json", "minor");
 	} else {
@@ -31,7 +31,9 @@ function main () {
 	    bumpVersion("./package.json", "patch");
 	}
 	if (options.commit){
-	    commit(options.message);
+	    commit(options.message, function(error, dat) {
+		print(`The data thing: {dat}`, "blue");
+	    });
 	}
 	
     }
