@@ -31,7 +31,7 @@ function commit(message, callback) {
 				// commit the project
 				// optional message
 				try {
-								var res = commitChangesLocally(message ? message : "Automated commit from bump-tool");
+								var res = commitChangesLocally(message ? message : "Automated commit from bump-tool", callback);
 
 								return callback(res.error, res.data);
 				} catch (error) {
@@ -115,7 +115,7 @@ function commitChangesLocally(commitMessage) {
 				var res = {};
 				console.log("Commit message: ", commitMessage);
 				try {
-								if ((0, _shelljs.exec)("git commit -a -m \"" + commitMessage + "\"").code !== 0) {
+								if ((0, _shelljs.exec)("git commit -am \"" + commitMessage + "\"").code !== 0) {
 												var message = "Shelljs failed to execute the Git commit.";
 												(0, _shelljs.echo)(message);
 												(0, _shelljs.exit)(1);
@@ -135,7 +135,7 @@ function tagPush() {
 				var e = (0, _shelljs.exec)("git push --tags"),
 				    ret = {};
 				if (e.code !== 0) {
-								ret.error = "Error: git push --tags failed with code {e.code}";
+								ret.error = "Error: git push --tags failed with code " + e.code;
 								//	ret.data = false;
 				}
 				//    ret.data = true;
