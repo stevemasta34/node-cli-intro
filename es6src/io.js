@@ -2,26 +2,40 @@
 // node-cli-intro/src/io.js
 
 import { open, writeFile, readFile } from "fs";
-import { exec } from "shelljs";
+import { exec, echo, exit } from "shelljs";
+
+/********************* Wrapper functions for easy names *********************/
 
 // bump the package version (assumed to be [currentval] + 0.1.0
-export function bumpVersion(path, releaseType) {
+export function bumpVersion(path, releaseType, callback) {
     console.log("Got to the bump call:", releaseType);
-    bumpPackageVersion(path, releaseType);
+    let ret = bumpPackageVersion(path, releaseType);
+    callback(ret.error, ret.ver);
 };
 
-export function commit(message = "Automated commit from node-bump-piler") {
+export function commit(message, callback) {
     // commit the project
     // optional message
-    commitChangesLocally(message);
+    try {
+	commitChangesLocally(message ? message : "Automated commit from bump-tool");
+	
+	return callback(null);
+    } catch (error) {
+	return callback(error);
+    }
 };
 
 export function tag() {
 };
 
-export function pushTags() {
-    exec("git push --tags");
+export function pushTags(callback) {
+    let res = tagPush();
+    
+    callback(res.error);
 };
+
+/********************* Actual working functions *********************/
+
 
 function bumpPackageVersion(pathToPackageJSON, bumpType) {
     var readData;
@@ -60,13 +74,14 @@ function bumpPackageVersion(pathToPackageJSON, bumpType) {
             // write to the file
 	    writeFile("./babel-es5-src/package.json",
 		      JSON.stringify(myObj, null, 4), function (err) {
-		if (err) console.error(err);
-
-		console.log("Write was successful");
-	    });
-	}
+			  if (err) {
+			      return console.error(err);
+			  }
+			  return console.log("Write was successful");
+		      });
+	    return { ver: newVer, error: null };
+	}	
     });
-
 }
 
 function commitChangesLocally(commitMessage) {
@@ -74,7 +89,12 @@ function commitChangesLocally(commitMessage) {
     console.log("Commit message: ",commitMessage);
 
     try {
-	exec(`git commit -a -m "${commitMessage}"`);
+	if (exec(`git commit -a -m "${commitMessage}"`).code !== 0) {
+	    let message = "Shelljs failed to execute the Git commit.";
+	    echo(message);
+	    exit(1);
+	    return {error: message};
+	}
     } catch (e) {
 	console.error("Error occured at 'commitChangesLocally'", e);
     }
@@ -83,3 +103,12 @@ function commitChangesLocally(commitMessage) {
 // add version tags
 
 //push git tags to remote repository
+function tagPush() {
+    let e = exec("git push --tags"), ret = {};
+    if (e.code !== 0) {
+	ret.error = `Error: git push --tags failed with code {e.code}`;
+//	ret.data = false;
+    }
+//    ret.data = true;
+    return ret;
+}
