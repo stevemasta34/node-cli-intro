@@ -31,11 +31,12 @@ export function commit(message, callback) {
 };
 
 export function tag(callback) {
+    // TODO: add tags through git command
+    // TODO: potentially, derive tag version with package.json version
 };
 
 export function pushTags(callback) {
     let res = tagPush();
-    
     callback(res.error);
 };
 

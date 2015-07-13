@@ -7,9 +7,9 @@ export var cli = cliArgs([
     { name: "verbose", type: Boolean, alias: "v", description: "Output operations to console"},
     { name: "help", type: Boolean, alias: "h", description: "Print usage instructions" },
 //    { name: "files", type: Array, defaultOption: true, description: "The input files" },
-    { name: "bump", type: Boolean, alias: "b", description: "Perform a 'patch' version bump" },
-    { name: "bump-major", type: Boolean, description: "Perform a 'major' version bump" },
-    { name: "bump-minor", type: Boolean, description: "Perform a 'minor' version bump" },
+    { name: "bump-patch", type: Boolean, alias: "p", description: "Perform a 'patch' version bump" },
+  { name: "bump-major", type: Boolean, alias: "M", description: "Perform a 'major' version bump" },
+  { name: "bump-minor", type: Boolean, alias: "i", description: "Perform a 'minor' version bump" },
     { name: "commit", type: Boolean, alias: "c", description: "Commit the local git repository." },
     { name: "message", type: String, alias: "m", description: "Message to supplied to a commit" }
 ]);
@@ -19,9 +19,6 @@ export var usage = cli.getUsage({
     header: ".",
     footer: "For more, http://github.com/stevemasta34/es-new-to-current"
 }); 
-
-/* parse the supplied args */
-// var options = cli.parse();
 
 export function print (obj, strColor) {
     try {

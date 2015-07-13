@@ -52,7 +52,6 @@ function tag(callback) {}
 
 function pushTags(callback) {
 				var res = tagPush();
-
 				callback(res.error);
 }
 
@@ -145,3 +144,6 @@ function tagPush() {
 				//    ret.data = true;
 				return ret;
 }
+
+// TODO: add tags through git command
+// TODO: potentially, derive tag version with package.json version
