@@ -10,10 +10,17 @@ export function bumpVersion(path, releaseType) {
     bumpPackageVersion(path, releaseType);
 };
 
-export function commit(message) {
+export function commit(message = "Automated commit from node-bump-piler") {
     // commit the project
     // optional message
-    commitChangesLocally(message ? message : "Automated commit from node-bump-piler");
+    commitChangesLocally(message);
+};
+
+export function tag() {
+};
+
+export function pushTags() {
+    exec("git push --tags");
 };
 
 function bumpPackageVersion(pathToPackageJSON, bumpType) {

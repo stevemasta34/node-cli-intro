@@ -9,6 +9,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.bumpVersion = bumpVersion;
 exports.commit = commit;
+exports.tag = tag;
+exports.pushTags = pushTags;
 
 var _fs = require("fs");
 
@@ -23,10 +25,22 @@ function bumpVersion(path, releaseType) {
 
 ;
 
-function commit(message) {
+function commit() {
+				var message = arguments[0] === undefined ? "Automated commit from node-bump-piler" : arguments[0];
+
 				// commit the project
 				// optional message
-				commitChangesLocally(message ? message : "Automated commit from node-bump-piler");
+				commitChangesLocally(message);
+}
+
+;
+
+function tag() {}
+
+;
+
+function pushTags() {
+				(0, _shelljs.exec)("git push --tags");
 }
 
 ;
