@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-import { print } from "./src/ui/tools";
+import { usage, cli, print } from "./src/ui/tools";
 import { doFlow } from "./src/index";
 
 // the module command-line-args demand the process.argv Array be uptampered.
