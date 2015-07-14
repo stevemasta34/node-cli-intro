@@ -1,11 +1,10 @@
 // node-cli-intro/src/index.js
-
-import { usage, print } from "./ui/tools";
-import { bumpVersion, commit } from "./io";
+import { usage, print } from "../lib/ui/tools";
+import { bumpVersion, commit } from "../lib/io";
 
 function myMethod () {
-    console.log("This is how we do it.");
-    console.log("And we keep on, keeping on");
+  console.log("This is how we do it.");
+  console.log("And we keep on, keeping on");
 };
 
 
