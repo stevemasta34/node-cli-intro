@@ -104,6 +104,7 @@ function commitChangesLocally(commitMessage) {
 	    echo(message);
 	    exit(1);
 	    res.error = message;
+      return res;
 	  }
 	  res.data = true;
 	  return res;
