@@ -1,14 +1,8 @@
 // node-cli-intro/src/index.js
-import { usage, print } from "../lib/ui/tools";
-import { bumpVersion, commit } from "../lib/io";
+import { usage, cli, print } from "./ui/tools";
+import { bumpVersion, commit } from "./io";
 
-function myMethod () {
-  console.log("This is how we do it.");
-  console.log("And we keep on, keeping on");
-};
-
-
-export function doFlow(optionsObj) {
+export default function doFlow(optionsObj = cli.parse()) {
   if(optionsObj.help) { 
     print(usage, "blue");
   }

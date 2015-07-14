@@ -1,12 +1,11 @@
 #! /usr/bin/env node
 "use strict";
 
-var _srcUiTools = require("./src/ui/tools");
-var _srcIndex = require("./src/index");
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-// the module command-line-args demand the process.argv Array be uptampered.
-// So I am forced into using all the functionality it supplies.
-var options = _srcUiTools.cli.parse();
+var _libIndex = require("../lib/index");
 
-// this will be migrated to index.js
-(0, _srcIndex.doFlow)(options);
+var _libIndex2 = _interopRequireDefault(_libIndex);
+
+// see src/index.js
+(0, _libIndex2["default"])();

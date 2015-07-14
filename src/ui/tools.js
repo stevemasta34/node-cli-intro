@@ -1,6 +1,6 @@
 // src/ui/tools.js
-import * as cliArgs from 'command-line-args';
-import * as colors from 'colors';
+var cliArgs = require('command-line-args');
+var colors = require('colors');
 
 /* command-line options */
 export var cli = cliArgs([
