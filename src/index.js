@@ -8,12 +8,6 @@ export default function doFlow(optionsObj = cli.parse()) {
   }
   else {
     console.log(optionsObj);
-    /*
-    for(var k in optionsObj) {
-	    if (optionsObj.hasOwnProperty(k))
-	      print(optionsObj[k], "green");
-    }
-     */
     let bumpCB = function(error, data) {
 	    // testing inappropriate bump function call
 	    console.log("Bump callback was hit");
@@ -35,7 +29,7 @@ export default function doFlow(optionsObj = cli.parse()) {
     }
     if (optionsObj.commit){
 	    commit(optionsObj.message, function(error, dat) {
-	      print(`The data thing: ${dat}`, "blue");
+	      print(`The data thing: ${JSON.stringify(dat)}`, "blue");
 	    });
 
     }
