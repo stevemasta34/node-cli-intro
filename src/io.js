@@ -2,7 +2,7 @@
 // node-cli-intro/src/io.js
 
 import { open, writeFile, readFile } from "fs";
-import { exec, echo, exit } from "shelljs";
+import { exec } from "child-process-promise";
 
 /********************* Wrapper functions for easy names *********************/
 
@@ -17,17 +17,17 @@ export function bumpVersion(path, releaseType, callback) {
   }
 };
 
+// commit the project
 export function commit(message, callback) {
-  // commit the project
-  // optional message
-  try {
-	  let res = commitChangesLocally(
-	    message ? message : "Automated commit from bump-tool", callback);
-	  
-	  return callback(res.error, res.data);
-  } catch (error) {
-	  return callback(error);
-  }
+
+  // Using Promises
+  commitChangesLocally(message ? message : "Automated commit from bump-tool")
+    .then( (result) => { // success
+    }, (err) => { // failure
+    }).catch( (exception) => {
+      // Exception handle block. For now, see what happens
+      console.error(exception);
+    });
 };
 
 export function tag(callback) {
@@ -44,84 +44,100 @@ export function pushTags(callback) {
 
 
 function bumpPackageVersion(pathToPackageJSON, bumpType) {
-  let readData;
-  // read in the file
-  readFile(pathToPackageJSON, { "encoding": "utf8"}, function (err, data) {
-	  if (err) {
-	    return console.error(err);
-	  }
-	  else {
-	    console.log("Got data from a file");
 
-	    readData = data;
-	    console.log(readData);
-	    
-	    let myObj = JSON.parse(data);
+  return new Promise(function (resolve, reject) {
+    // read in the file
+    readFile(pathToPackageJSON, { "encoding": "utf8"}, function (err, data) {
+	    if (err) {
+	      console.error(err);
+        reject(new Error(err));
+	    }
+	    else {	    
+	      let myObj = JSON.parse(data);
 
-      // JSON.destringify (or some equivalent), so we get the object back
-	    let verNum = myObj["version"];
-	    let split = verNum.split('.');
-	    let splitInd = (bumpType === "major" ? 0 : bumpType === "minor" ? 1 : 2);
-	    let theInt = Number(split[ splitInd ]);
-	    console.log("Parsed this as the current",bumpType,"version num:", theInt);
+        // JSON.destringify (or some equivalent), so we get the object back
+	      let verNum = myObj["version"];
+	      let split = verNum.split('.');
 
-	    // bump the int
-	    theInt += 1;
-	    split[splitInd] = theInt;
-	    console.log(split);
+        let splitInd = (bumpType === "major" ? 0 : bumpType === "minor" ? 1 : 2);
 
-	    // tick the property of the object
-	    let newVer = split.join(".");
-	    console.log("New version: ",newVer);
-	    myObj["version"] = newVer;
+	      let theInt = Number(split[ splitInd ]);
+	      console.log(`Parsed bumptype: ${bumpType}, version num: ${theInt}`);
 
-	    let ret = {};
-      // write to the file
-	    writeFile("./package.json",
-		            JSON.stringify(myObj, null, 4), function (err) {
-			            if (err) {
-			              console.error(err);
-			              ret.error = err;
-			            }
-			            else {
-			              console.log("Write was successful");
-			              ret.successful = true;
-			              ret.data = readData;
-			            }
-		            });
-	    return ret;
-	  }	
+	      // bump the int
+	      theInt += 1;
+        split[splitInd] = theInt;
+        
+        if (bumpType === "major") { 
+          split[splitInd + 1] = 0;
+          split[splitInd + 2] = 0;
+        }
+        else if (bumpType === "minor") {
+          split[splitInd + 1] = 0;
+        }
+
+	      // tick the property of the object
+	      let newVer = split.join(".");
+	      console.log(`New version: ${newVer}`);
+	      myObj["version"] = newVer;
+
+        // write to the file
+	      writeFile("./package.json",
+		              JSON.stringify(myObj, null, 4), function (err) {
+			              if (err) {
+			                console.error(err);
+			                // Error reject
+                      reject(new Error(err));
+			              }
+			              else {
+			                console.log("Write was successful");
+                      // resolve data
+                      resolve(data);
+			              }
+		              });
+	    }	
+    });
   });
+  
 }
 
+// commit changes to local repo
 function commitChangesLocally(commitMessage) {
-  // commit changes to local repo
-  let res = {};
-  console.log("Commit message: ",commitMessage);
-  try {
-	  if (exec(`git commit -am "${commitMessage}"`).code !== 0) {
-	    let message = "Shelljs failed to execute the Git commit.";
-	    echo(message);
-	    exit(1);
-	    res.error = message;
-      return res;
-	  }
-	  res.data = true;
-	  return res;
-  } catch (e) {
-	  return console.error("Error occured at 'commitChangesLocally'", e);
-  }
+  //  console.log("Commit message: ",commitMessage);
+  return new Promise(function(resolveFunc, rejectFunc) {
+    let topCmd = `git commit -am "${commitMessage}"`;
+    exec(topCmd)
+      .then(function (result) {
+        // resolve the program, because we've hit the succes
+        console.log("Hit the top level success block, in CCL Promise");
+        resolveFunc(result);
+      })
+      .fail(function (error) {
+	      let message = "Shelljs failed to execute the Git commit.";
+        exec(`echo ${message}`)
+          .then(function (res) {
+            rejectFunc(new Error(message));
+          })
+          .fail(function (err) {
+            rejectFunc(new Error(`ERROR: ${err}`));
+          })
+          .progress(function (kidProc) {
+            console.log(`kidProc.pid: ${kidProc.pid}`);
+          });
+      });
+  });
 };
-
-// add version tags
 
 //push git tags to remote repository
 function tagPush() {
-  let e = exec("git push --tags"), ret = {};
-  if (e.code !== 0) {
-	  ret.error = `Error: git push --tags failed with code ${e.code}`;
-    //	ret.data = false;
-  }
-  //    ret.data = true;
-  return ret;
+
+  new Promise (function (resolve, reject) {
+    exec("git push --tags")
+      .then(function (result) {
+        // 
+      })
+      .fail(function (error) {
+        // 
+      });    
+  });
 }
