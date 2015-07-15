@@ -23,8 +23,9 @@ export function commit(message, callback) {
   // Using Promises
   commitChangesLocally(message ? message : "Automated commit from bump-tool")
     .then( (result) => { // success
+      // The result is a childProcess object
       console.log(`git commited successfully with status code:
-                  ${JSON.stringify(result, null, 4)}`);
+                  ${result["childProcess"]["exitCode"]}`);
       // Is this desired functionality?
       return callback(null, result);
     }, (err) => { // failure
