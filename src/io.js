@@ -27,7 +27,7 @@ export function commit(message, callback) {
       // Is this desired functionality?
       return callback(null, result);
     }, (err) => { // failure
-      console.error(`commit failed, with status code: ${err}`);
+      console.error(`commit failed, with status code: ${JSON.stringify(err)}`);
       return callback(err);
     }).catch( (exception) => {
       // Exception handle block. For now, see what happens
