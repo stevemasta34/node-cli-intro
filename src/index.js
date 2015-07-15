@@ -29,7 +29,7 @@ export default function doFlow(optionsObj = cli.parse()) {
     }
     if (optionsObj.commit){
 	    commit(optionsObj.message, function(error, dat) {
-	      print(`The data thing: ${JSON.stringify(dat)}`, "blue");
+	      print(`The data thing: ${dat}`, "blue");
 	    });
 
     }

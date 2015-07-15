@@ -24,7 +24,7 @@ export function commit(message, callback) {
   commitChangesLocally(message ? message : "Automated commit from bump-tool")
     .then( (result) => { // success
       console.log(`git commited successfully with status code:
-                  ${JSON.stringify(result)}`);
+                  ${JSON.stringify(result, null, 4)}`);
       // Is this desired functionality?
       return callback(null, result);
     }, (err) => { // failure
