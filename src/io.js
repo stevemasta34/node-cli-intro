@@ -23,7 +23,12 @@ export function commit(message, callback) {
   // Using Promises
   commitChangesLocally(message ? message : "Automated commit from bump-tool")
     .then( (result) => { // success
+      console.log(`git commited successfully with status code: ${result}`);
+      // Is this desired functionality?
+      return callback(null, result);
     }, (err) => { // failure
+      console.error(`commit failed, with status code: ${err}`);
+      return callback(err);
     }).catch( (exception) => {
       // Exception handle block. For now, see what happens
       console.error(exception);
