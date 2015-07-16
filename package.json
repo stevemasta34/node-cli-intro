@@ -1,6 +1,6 @@
 {
     "name": "node-cli-intro",
-    "version": "0.3.0",
+    "version": "0.3.2",
     "private": true,
     "description": "OS agnostic build tool, written in Javascript for Javascript. Process will be as follows: version bump (according to SemVer's guidelines), build the src, git tag the src repo, push the tags to remote origin, document the release via GitHub release api.",
     "main": "bin/app-compiled.js",

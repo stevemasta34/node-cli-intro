@@ -153,6 +153,7 @@ export function tag(version, tagMessage) {
 
   new Promise (function (resolve, reject) {
     // probe the file for the version
+    console.log(`Made it to #tag with version: ${version}`);
     // tag with said version: "git tag -a <version> -m <>"
     exec(`git tag -a v${version} -m "${tagMessage}"`)
       .then((succRes) => {
