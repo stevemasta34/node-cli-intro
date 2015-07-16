@@ -1,8 +1,9 @@
-//#! /usr/bin/env node
 // node-cli-intro/src/io.js
 
 import { open, writeFile, readFile } from "fs";
 import { exec } from "child-process-promise";
+//import { inc, clean, valid } from "semver";
+import { simpleIncrement } from "./utils/bump";
 
 /********************* Wrapper functions for easy names *********************/
 
@@ -80,7 +81,6 @@ export function pushTags(callback) {
 
 /********************* Actual working functions *********************/
 
-
 function bumpPackageVersion(pathToPackageJSON, bumpType) {
 
   return new Promise(function (resolve, reject) {
@@ -93,34 +93,14 @@ function bumpPackageVersion(pathToPackageJSON, bumpType) {
 	    else {	    
 	      let myObj = JSON.parse(data);
 
-        // JSON.destringify (or some equivalent), so we get the object back
 	      let verNum = myObj["version"];
-	      let split = verNum.split('.');
 
-        let splitInd = (bumpType === "major" ? 0 : bumpType === "minor" ? 1 : 2);
-
-	      let theInt = Number(split[ splitInd ]);
-	      console.log(`Parsed bumptype: ${bumpType}, version num: ${theInt}`);
-
-	      // bump the int
-	      theInt += 1;
-        split[splitInd] = theInt;
+        let newVer = simpleIncrement(verNum, bumpType);
         
-        if (bumpType === "major") { 
-          split[splitInd + 1] = 0;
-          split[splitInd + 2] = 0;
-        }
-        else if (bumpType === "minor") {
-          split[splitInd + 1] = 0;
-        }
-
-	      // tick the property of the object
-	      let newVer = split.join(".");
-	      console.log(`New version: ${newVer}`);
 	      myObj["version"] = newVer;
 
         // write to the file
-	      writeFile("./package.json",
+	      writeFile(pathToPackageJSON,
 		              JSON.stringify(myObj, null, 4), function (err) {
 			              if (err) {
 			                console.error(err);
@@ -133,7 +113,7 @@ function bumpPackageVersion(pathToPackageJSON, bumpType) {
                       resolve(newVer);
 			              }
 		              });
-	    }	
+	    }
     });
   });
   
