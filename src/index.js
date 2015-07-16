@@ -1,5 +1,5 @@
 // node-cli-intro/src/index.js
-import { usage, cli, print } from "./ui/tools";
+import { usage, cli, print } from "./utils/ui";
 import { bumpVersion, commit } from "./io";
 
 export default function doFlow(optionsObj = cli.parse()) {

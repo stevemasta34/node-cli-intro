@@ -18,13 +18,10 @@ describe("IO", function() {
       var testCallback = function (err, res) {
         _this.res = res;
         if (err) expect(0).to.be.same(1); // force fail
-        /*
-          else {
-          self.result = res;
-          }
-        */
+
         self.result = res;
         expect(self).to.have.a.property("result", res);
+
         console.log(self.result);
         doAssertion();
       };

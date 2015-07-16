@@ -8,6 +8,7 @@
     "child-process-promise": "^1.1.0",
     "colors": "^1.1.2",
     "command-line-args": "^0.5.9",
+    "semver": "^5.0.1",
     "shelljs": "^0.5.1"
   },
   "devDependencies": {
