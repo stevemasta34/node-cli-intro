@@ -7,7 +7,7 @@ export default function doFlow(optionsObj = cli.parse()) {
     print(usage, "yellow");
   }
   else {
-    console.log(optionsObj);
+    print(optionsObj, "green");
     let bumpCB = function(error, data) {
 	    // testing inappropriate bump function call
 	    print(`Bump callback received data: ${data}`, "cyan");

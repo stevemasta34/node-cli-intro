@@ -7,6 +7,8 @@ var bump = require("../lib/utils/bump.js");
 
 describe("Bump", function () {
   describe("#simpleIncrement", function () {
-    console.log("Testing for bump things");
+    it("tick the version number, 'carrying the zero'", function () {
+      console.log("Testing for bump things");
+    });
   });
 });
