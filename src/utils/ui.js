@@ -1,6 +1,6 @@
 // src/ui/tools.js
 var cliArgs = require('command-line-args');
-var colors = require('colors/safe');
+var colors = require('colors');
 
 /* command-line options */
 export var cli = cliArgs([
@@ -23,12 +23,15 @@ export var usage = cli.getUsage({
 export function print (obj, strColor) {
   try {
 	  if (strColor) {
-      console.log(([strColor])(obj));
+      console.log(JSON.stringify(obj)[strColor]);
 	  } else {
-      console.log(obj);
+      console.log(JSON.stringify(obj));
 	  }
   } catch (e) {
 	  console.error("Object was most likely null: ",e);
   }
 };
-		
+
+export function printError (obj) {
+  console.error(JSON.stringify(obj).red);
+};

@@ -4,11 +4,12 @@ import { open, writeFile, readFile } from "fs";
 import { exec } from "child-process-promise";
 //import { inc, clean, valid } from "semver";
 import { simpleIncrement } from "./utils/bump";
+import { printError } from "./utils/ui";
 
 /********************* Wrapper functions for easy names *********************/
 
 // bump the package version (assumed to be [currentval] + 0.1.0
-export function bumpVersion(path, releaseType, callback) {
+function bumpVersion(path, releaseType, callback) {
   console.log("\nGot to the bump call:", releaseType);
 
 	let ret = bumpPackageVersion(path, releaseType);
@@ -27,7 +28,7 @@ export function bumpVersion(path, releaseType, callback) {
 };
 
 // commit the project
-export function commit(message, callback) {
+/*function commit(message, callback) {
 
   // Using Promises
   commitChangesLocally(message)
@@ -45,7 +46,8 @@ export function commit(message, callback) {
       console.error(exception);
     });
 };
-
+*/
+/*
 export function tag(versionString, tagPushMessage, callback) {
   // TODO: add tags through git command
   versionTag(versionString, tagPushMessage)
@@ -60,8 +62,9 @@ export function tag(versionString, tagPushMessage, callback) {
       // log the exception
       // callback with the exception
     });
-};
+};*/
 
+/*
 export function pushTags(callback) {
   let res = tagPush();
 
@@ -77,11 +80,11 @@ export function pushTags(callback) {
     .catch((ex) => {
       console.error(`Exception: ${ex}`);
     });
-};
+};*/
 
 /********************* Actual working functions *********************/
 
-function bumpPackageVersion(pathToPackageJSON, bumpType) {
+export function bumpPackageVersion(pathToPackageJSON, bumpType) {
 
   return new Promise(function (resolve, reject) {
     // read in the file
@@ -117,10 +120,10 @@ function bumpPackageVersion(pathToPackageJSON, bumpType) {
     });
   });
   
-}
+};
 
 // commit changes to local repo
-function commitChangesLocally(commitMessage) {
+export function commit(commitMessage) {
   //  console.log("Commit message: ",commitMessage);
   return new Promise(function(resolveFunc, rejectFunc) {
     let topCmd = `git commit -am "${commitMessage}"`;
@@ -146,7 +149,7 @@ function commitChangesLocally(commitMessage) {
   });
 };
 
-function versionTag(version, tagMessage) {
+export function tag(version, tagMessage) {
 
   new Promise (function (resolve, reject) {
     // probe the file for the version
@@ -164,13 +167,13 @@ function versionTag(version, tagMessage) {
         reject(new Error(exception));
       });
   });
-}
+};
 
 //push git tags to remote repository
-function tagPush() {
+export function pushTags () {
 
   new Promise (function (resolve, reject) {
-    exec("git push --tags")
+    exec("git push --follow-tags")
       .then(function (result) {
         //
         resolve(result);

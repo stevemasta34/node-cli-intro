@@ -1,38 +1,52 @@
 // node-cli-intro/src/index.js
-import { usage, cli, print } from "./utils/ui";
-import { bumpVersion, commit } from "./io";
+import { usage, cli, print, printError } from "./utils/ui";
+import { bumpPackageVersion, commit, tag, pushTags } from "./io";
 
 export default function doFlow(optionsObj = cli.parse()) {
+  let packageJsonPath = "./package.json";
   if(optionsObj.help) { 
     print(usage, "yellow");
   }
   else {
     print(optionsObj, "green");
-    let bumpCB = function(error, data) {
-	    // testing inappropriate bump function call
-	    print(`Bump callback received data: ${data}`, "cyan");
-    };
 
     if (optionsObj.message) {
       
       if (optionsObj.commit){
-	      commit(optionsObj.message, function(error, dat) {
-	        print(`The data thing: ${dat}`, "cyan");
-	      });
-      }
-      
-      if (optionsObj["bump-major"] !== undefined) {
-	      // pass the major key to the bump command
-	      bumpVersion("./package.json", "major", bumpCB);
-      }
-      if (optionsObj["bump-minor"] !== undefined) {
-	      // pass the minor key to the bump command
-	      bumpVersion("./package.json", "minor", bumpCB);
-      }
-      if (optionsObj["bump-patch"] !== undefined) {
-	      // pass the patch key to the bump command
-	      bumpVersion("./package.json", "patch", bumpCB);
-      }
+	      commit(optionsObj.message)
+          .then( (res) => {
+            console.log(`
+          git commited successfully with status code: ${res["childProcess"]["exitCode"]}`);
+            print(res, "yellow");
+            return res;
+          })
+          .then( () => {
+            print("Hit the second then block.", "green");
+            let bumpPackage = (() => {
+              if (optionsObj["bump-major"]) {
+                return bumpPackageVersion(packageJsonPath, "major");
+              } else if (optionsObj["bump-minor"]) {
+                return bumpPackageVersion(packageJsonPath, "minor");
+              } else if (optionsObj["bump-patch"]) {
+                return bumpPackageVersion(packageJsonPath, "patch");
+              } else {
+                throw "No bump version";
+              }
+            })();
+            return bumpPackage();
+          })
+          .then( (verCode) => tag(verCode, optionsObj.message) )
+          .then( () => pushTags() )
+          .catch( (err) => {
+            printError(err);
+          })
+            .then ( (param) => {
+              print(`Past the error block with param: ${param}`, "cyan");
+            });
+      }     
+    }
+    else {
+      printError("Please supply a message with -m");
     }
   }
 };
