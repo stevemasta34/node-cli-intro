@@ -17,17 +17,20 @@ export default function doFlow(optionsObj = cli.parse()) {
           .then( (res) => {
             console.log(`
           git commited successfully with status code: ${res["childProcess"]["exitCode"]}`);
-            print(res, "yellow");
+            //print(res, "yellow");
             return res;
           })
           .then( () => {
             print("Hit the second then block.", "green");
             let bumpPackage = (() => {
               if (optionsObj["bump-major"]) {
+                print(`Decide on "bump-major"`, "cyan");
                 return bumpPackageVersion(packageJsonPath, "major");
               } else if (optionsObj["bump-minor"]) {
+                print(`Decide on "bump-minor'"`, "cyan");
                 return bumpPackageVersion(packageJsonPath, "minor");
               } else if (optionsObj["bump-patch"]) {
+                print(`Decide on "bump-patch"`, "cyan");
                 return bumpPackageVersion(packageJsonPath, "patch");
               } else {
                 throw "No bump version";
