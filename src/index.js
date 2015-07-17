@@ -37,6 +37,7 @@ export default function doFlow(optionsObj = cli.parse()) {
             }
           })
           .then( (verCode) => tag(verCode, optionsObj.message) )
+          .then( () => commit(optionsObj.message))
           .then( () => pushTags() )
           .catch( (err) => {
             printError(err);
