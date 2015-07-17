@@ -23,12 +23,15 @@ export var usage = cli.getUsage({
 export function print (obj, strColor) {
   try {
 	  if (strColor) {
-      console.log(obj.toString()[strColor]);
+      console.log(JSON.stringify(obj)[strColor]);
 	  } else {
-      console.log(obj.toString());
+      console.log(JSON.stringify(obj));
 	  }
   } catch (e) {
 	  console.error("Object was most likely null: ",e);
   }
 };
-		
+
+export function printError (obj) {
+  console.error(JSON.stringify(obj).red);
+};

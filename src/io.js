@@ -1,149 +1,187 @@
-#! /usr/bin/env node
-
 // node-cli-intro/src/io.js
 
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-				value: true
-});
-exports.bumpVersion = bumpVersion;
-exports.commit = commit;
-exports.tag = tag;
-exports.pushTags = pushTags;
-
-var _fs = require("fs");
-
-var _shelljs = require("shelljs");
+import { open, writeFile, readFile } from "fs";
+import { exec } from "child-process-promise";
+//import { inc, clean, valid } from "semver";
+import { simpleIncrement } from "./utils/bump";
+import { printError } from "./utils/ui";
 
 /********************* Wrapper functions for easy names *********************/
 
 // bump the package version (assumed to be [currentval] + 0.1.0
-
 function bumpVersion(path, releaseType, callback) {
-				console.log("\nGot to the bump call:", releaseType);
-				try {
-								var ret = bumpPackageVersion(path, releaseType);
-								callback(ret.error ? null : ret.error, ret.data);
-				} catch (e) {
-								callback(e);
-				}
-}
+  console.log("\nGot to the bump call:", releaseType);
 
-;
+	let ret = bumpPackageVersion(path, releaseType);
 
-function commit(message, callback) {
-				// commit the project
-				// optional message
-				try {
-								var res = commitChangesLocally(message ? message : "Automated commit from bump-tool", callback);
+  ret.then( (result) => {
+    callback(null, result);
+  }, (error) => {
+    // Error propogates back up.
+    callback(error);
+  }).catch( (exception) => {
+    // Exception block
+    console.error(exception);
+    callback(exception);
+  });
+  
+};
 
-								return callback(res.error, res.data);
-				} catch (error) {
-								return callback(error);
-				}
-}
+// commit the project
+/*function commit(message, callback) {
 
-;
+  // Using Promises
+  commitChangesLocally(message)
+    .then( (result) => { // success
+      // The result is a childProcess object
+      console.log(`
+      git commited successfully with status code: ${result["childProcess"]["exitCode"]}`);
+      // Is this desired functionality?
+      return callback(null, result);
+    }, (err) => { // failure
+      console.error(`commit failed, with status code: ${err}`);
+      return callback(err);
+    }).catch( (exception) => {
+      // Exception handle block. For now, see what happens
+      console.error(exception);
+    });
+};
+*/
+/*
+export function tag(versionString, tagPushMessage, callback) {
+  // TODO: add tags through git command
+  versionTag(versionString, tagPushMessage)
+    .then( (result) => {
+      // pretty write something to inform the user they did goo
+      callback (null,result);
+    }, (err) => {
+      // Console.Error notifiction
+      callback(err);
+    })
+    .catch( (exc) => {
+      // log the exception
+      // callback with the exception
+    });
+};*/
 
-function tag(callback) {}
+/*
+export function pushTags(callback) {
+  let res = tagPush();
 
-;
-
-function pushTags(callback) {
-				var res = tagPush();
-				callback(res.error);
-}
-
-;
+  res.then(
+    (result) => {
+      console.log("Tag push was successful");
+      callback(null, result);
+    },
+    (error) => {
+      console.error(`ERROR: ${error}`);
+      callback(error);
+    })
+    .catch((ex) => {
+      console.error(`Exception: ${ex}`);
+    });
+};*/
 
 /********************* Actual working functions *********************/
 
-function bumpPackageVersion(pathToPackageJSON, bumpType) {
-				var readData = undefined;
-				// read in the file
-				(0, _fs.readFile)(pathToPackageJSON, { "encoding": "utf8" }, function (err, data) {
-								if (err) {
-												return console.error(err);
-								} else {
-												var _ret = (function () {
-																console.log("Got data from a file");
+export function bumpPackageVersion(pathToPackageJSON, bumpType) {
 
-																readData = data;
-																console.log(readData);
+  return new Promise(function (resolve, reject) {
+    // read in the file
+    readFile(pathToPackageJSON, { "encoding": "utf8"}, function (err, data) {
+	    if (err) {
+	      console.error(err);
+        reject(new Error(err));
+	    }
+	    else {	    
+	      let myObj = JSON.parse(data);
 
-																var myObj = JSON.parse(data);
+	      let verNum = myObj["version"];
 
-																// JSON.destringify (or some equivalent), so we get the object back
-																var verNum = myObj["version"];
-																var split = verNum.split(".");
-																var splitInd = bumpType === "major" ? 0 : bumpType === "minor" ? 1 : 2;
-																var theInt = Number(split[splitInd]);
-																console.log("Parsed this as the current", bumpType, "version num:", theInt);
+        let newVer = simpleIncrement(verNum, bumpType);
+        
+	      myObj["version"] = newVer;
 
-																// bump the int
-																theInt += 1;
-																split[splitInd] = theInt;
-																console.log(split);
-
-																// tick the property of the object
-																var newVer = split.join(".");
-																console.log("New version: ", newVer);
-																myObj["version"] = newVer;
-
-																var ret = {};
-																// write to the file
-																(0, _fs.writeFile)("./package.json", JSON.stringify(myObj, null, 4), function (err) {
-																				if (err) {
-																								console.error(err);
-																								ret.error = err;
-																				} else {
-																								console.log("Write was successful");
-																								ret.successful = true;
-																								ret.data = readData;
-																				}
-																});
-																return {
-																				v: ret
-																};
-												})();
-
-												if (typeof _ret === "object") return _ret.v;
-								}
-				});
-}
-
-function commitChangesLocally(commitMessage) {
-				// commit changes to local repo
-				var res = {};
-				console.log("Commit message: ", commitMessage);
-				try {
-								if ((0, _shelljs.exec)("git commit -am \"" + commitMessage + "\"").code !== 0) {
-												var message = "Shelljs failed to execute the Git commit.";
-												(0, _shelljs.echo)(message);
-												(0, _shelljs.exit)(1);
-												res.error = message;
-								}
-								res.data = true;
-								return res;
-				} catch (e) {
-								return console.error("Error occured at 'commitChangesLocally'", e);
-				}
+        // write to the file
+	      writeFile(pathToPackageJSON,
+		              JSON.stringify(myObj, null, 4), function (err) {
+			              if (err) {
+			                console.error(err);
+			                // Error reject
+                      reject(new Error(err));
+			              }
+			              else {
+			                console.log("Write was successful");
+                      // resolve data
+                      resolve(newVer);
+			              }
+		              });
+	    }
+    });
+  });
+  
 };
 
-// add version tags
+// commit changes to local repo
+export function commit(commitMessage) {
+  //  console.log("Commit message: ",commitMessage);
+  return new Promise(function(resolveFunc, rejectFunc) {
+    let topCmd = `git commit -am "${commitMessage}"`;
+    exec(topCmd)
+      .then(function (result) {
+        // resolve the program, because we've hit the succes
+        console.log("Hit the top level success block, in CCL Promise");
+        resolveFunc(result);
+      })
+      .fail(function (error) {
+	      let message = "Shelljs failed to execute the Git commit.";
+        exec(`echo ${message}`)
+          .then(function (res) {
+            rejectFunc(new Error(message));
+          })
+          .fail(function (err) {
+            rejectFunc(new Error(`ERROR: ${err}`));
+          })
+          .progress(function (kidProc) {
+            console.log(`kidProc.pid: ${kidProc.pid}`);
+          });
+      });
+  });
+};
+
+export function tag(version, tagMessage) {
+
+  new Promise (function (resolve, reject) {
+    // probe the file for the version
+    console.log(`Made it to #tag with version: ${version}`);
+    // tag with said version: "git tag -a <version> -m <>"
+    exec(`git tag -a v${version} -m "${tagMessage}"`)
+      .then((succRes) => {
+        console.log(`Version tagging to v${version} was succesful`);
+        resolve(succRes);
+      }, (failRes) => {
+        console.error(`ERROR: Tagging to v${version} FAILED`);
+        reject(new Error(failRes));
+      })
+      .catch( (exception) => {
+        console.error(`ERROR: ${exception}`);
+        reject(new Error(exception));
+      });
+  });
+};
 
 //push git tags to remote repository
-function tagPush() {
-				var e = (0, _shelljs.exec)("git push --tags"),
-				    ret = {};
-				if (e.code !== 0) {
-								ret.error = "Error: git push --tags failed with code " + e.code;
-								//	ret.data = false;
-				}
-				//    ret.data = true;
-				return ret;
-}
+export function pushTags () {
 
-// TODO: add tags through git command
-// TODO: potentially, derive tag version with package.json version
+  new Promise (function (resolve, reject) {
+    exec("git push --follow-tags")
+      .then(function (result) {
+        //
+        resolve(result);
+      })
+      .fail(function (error) {
+        //
+        reject(error);
+      });    
+  });
+};

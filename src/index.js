@@ -1,54 +1,53 @@
 // node-cli-intro/src/index.js
+import { usage, cli, print, printError } from "./utils/ui";
+import { bumpPackageVersion, commit, tag, pushTags } from "./io";
 
-"use strict";
+export default function doFlow(optionsObj = cli.parse()) {
+  let packageJsonPath = "./package.json";
+  if(optionsObj.help) { 
+    print(usage, "yellow");
+  }
+  else {
+    print(optionsObj, "green");
 
-Object.defineProperty(exports, "__esModule", {
-   value: true
-});
-exports.doFlow = doFlow;
+    if (optionsObj.message) {
+      
+      if (optionsObj.commit){
+	      commit(optionsObj.message)
+          .then( (res) => {
+            console.log(`
+          git commited successfully with status code: ${res["childProcess"]["exitCode"]}`);
+            //print(res, "yellow");
+            return res;
+          })
+          .then( () => {
+            print("Hit the second then block.", "green");
 
-var _uiTools = require("./ui/tools");
-
-var _io = require("./io");
-
-function myMethod() {
-   console.log("This is how we do it.");
-   console.log("And we keep on, keeping on");
+            if (optionsObj["bump-major"]) {
+              print(`Decide on "bump-major"`, "cyan");
+              return bumpPackageVersion(packageJsonPath, "major");
+            } else if (optionsObj["bump-minor"]) {
+              print(`Decide on "bump-minor'"`, "cyan");
+              return bumpPackageVersion(packageJsonPath, "minor");
+            } else if (optionsObj["bump-patch"]) {
+              print(`Decide on "bump-patch"`, "cyan");
+              return bumpPackageVersion(packageJsonPath, "patch");
+            } else {
+              throw "No bump version";
+            }
+          })
+          .then( (verCode) => tag(verCode, optionsObj.message) )
+          .then( () => pushTags() )
+          .catch( (err) => {
+            printError(err);
+          })
+            .then ( (param) => {
+              print(`Past the error block with param: ${param}`, "cyan");
+            });
+      }     
+    }
+    else {
+      printError("Please supply a message with -m");
+    }
+  }
 };
-
-function doFlow(optionsObj) {
-   if (optionsObj.help) {
-      (0, _uiTools.print)(_uiTools.usage, "blue");
-   } else {
-      console.log(optionsObj);
-      for (var k in optionsObj) {
-         if (optionsObj.hasOwnProperty(k)) (0, _uiTools.print)(optionsObj[k], "green");
-      }
-      var bumpCB = function bumpCB(error, data) {
-         // testing inappropriate bump function call
-         console.log("Bump callback was hit");
-      };
-
-      // This could be done with string parsing, but that can be error pron
-      // and this is a definite thing that will reduce operation count
-      if (optionsObj["bump-major"] !== undefined) {
-         // pass the major key to the bump command
-         (0, _io.bumpVersion)("./package.json", "major", bumpCB);
-      }
-      if (optionsObj["bump-minor"] !== undefined) {
-         // pass the minor key to the bump command
-         (0, _io.bumpVersion)("./package.json", "minor", bumpCB);
-      }
-      if (optionsObj["bump-patch"] !== undefined) {
-         // pass the patch key to the bump command
-         (0, _io.bumpVersion)("./package.json", "patch", bumpCB);
-      }
-      if (optionsObj.commit) {
-         (0, _io.commit)(optionsObj.message, function (error, dat) {
-            (0, _uiTools.print)("The data thing: " + dat, "blue");
-         });
-      }
-   }
-}
-
-;

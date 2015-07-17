@@ -1,16 +1,19 @@
 {
     "name": "node-cli-intro",
-    "version": "0.2.8",
+    "version": "0.3.2",
     "private": true,
     "description": "OS agnostic build tool, written in Javascript for Javascript. Process will be as follows: version bump (according to SemVer's guidelines), build the src, git tag the src repo, push the tags to remote origin, document the release via GitHub release api.",
-    "main": "bootstrap.js",
+    "main": "bin/app-compiled.js",
     "dependencies": {
-        "command-line-args": "^0.5.9",
+        "child-process-promise": "^1.1.0",
         "colors": "^1.1.2",
+        "command-line-args": "^0.5.9",
+        "semver": "^5.0.1",
         "shelljs": "^0.5.1"
     },
     "devDependencies": {
-        "babel": "^5.6.14"
+        "babel": "^5.6.14",
+        "fs-promise": "^0.3.1"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -33,7 +36,7 @@
         "url": "https://github.com/stevemasta34/node-cli-intro/issues"
     },
     "bin": {
-        "node-bump-piler": "bootstrap.js"
+        "semver-bump": "bin/app-compiled.js"
     },
     "homepage": "https://github.com/stevemasta34/node-cli-intro"
 }
