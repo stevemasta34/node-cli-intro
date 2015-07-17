@@ -8,8 +8,6 @@ export default function doFlow(optionsObj = cli.parse()) {
     print(usage, "yellow");
   }
   else {
-    print(optionsObj, "green");
-
     if (optionsObj.message) {
       
       if (optionsObj.commit){
@@ -17,8 +15,6 @@ export default function doFlow(optionsObj = cli.parse()) {
           .then( (res) => {
             console.log(`
           git commited successfully with status code: ${res["childProcess"]["exitCode"]}`);
-            //print(res, "yellow");
-            return res;
           })
           .then( () => {
             print("Hit the second then block.", "green");
@@ -37,13 +33,14 @@ export default function doFlow(optionsObj = cli.parse()) {
             }
           })
           .then( (verCode) => tag(verCode, optionsObj.message) )
+          .then( () => commit(optionsObj.message))
           .then( () => pushTags() )
           .catch( (err) => {
             printError(err);
           })
-            .then ( (param) => {
-              print(`Past the error block with param: ${param}`, "cyan");
-            });
+          .then ( (param) => {
+            print(`Past the error block with param: ${param}`, "cyan");
+          });
       }     
     }
     else {

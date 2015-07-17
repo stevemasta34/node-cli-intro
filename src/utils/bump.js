@@ -1,5 +1,4 @@
 //node-cli-intro/src/utils/bump.js
-
 export function simpleIncrement(verNum, bumpType) {
 
   // parse and find the int to tick
