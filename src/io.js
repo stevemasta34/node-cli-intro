@@ -99,11 +99,11 @@ export function pushTags () {
 
   new Promise (function (resolve, reject) {
     exec("git push --follow-tags")
-      .then(function (result) {
+      .then( (result) => {
         //
         resolve(result);
       })
-      .fail(function (error) {
+      .fail( (error) => {
         //
         reject(error);
       });    
