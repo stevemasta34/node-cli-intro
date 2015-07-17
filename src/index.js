@@ -32,14 +32,21 @@ export default function doFlow(optionsObj = cli.parse()) {
               throw "No bump version";
             }
           })
-          .then( (verCode) => tag(verCode, optionsObj.message) )
+          .then( (verCode) => {
+            if (optionsObj.version) {
+              tag(`${verCode}-${optionsObj.version}`, optionsObj.message);
+            }
+            else {
+              tag(verCode, optionsObj.message);
+            }
+          } )
           .then( () => commit(optionsObj.message))
-          .then( () => pushTags() )
+          .then( () => {
+            print("not really pushing tags. Just a commit.", "green");
+            // pushTags();
+          } )
           .catch( (err) => {
             printError(err);
-          })
-          .then ( (param) => {
-            print(`Past the error block with param: ${param}`, "cyan");
           });
       }     
     }

@@ -1,5 +1,4 @@
 // node-cli-intro/src/io.js
-
 import { open, writeFile, readFile } from "fs";
 import { exec } from "child-process-promise";
 //import { inc, clean, valid } from "semver";
@@ -9,36 +8,36 @@ import { printError } from "./utils/ui";
 // bump the package version (assumed to be [currentval] + 0.1.0
 export function bumpPackageVersion(pathToPackageJSON, bumpType) {
 
-    return new Promise(function (resolve, reject) {
-	// read in the file
-	readFile(pathToPackageJSON, { "encoding": "utf8"}, function (err, data) {
+  return new Promise(function (resolve, reject) {
+	  // read in the file
+	  readFile(pathToPackageJSON, { "encoding": "utf8"}, function (err, data) {
 	    if (err) {
-		console.error(err);
-		reject(new Error(err));
+		    console.error(err);
+		    reject(new Error(err));
 	    }
 	    else {	    
-		let myObj = JSON.parse(data);
+		    let myObj = JSON.parse(data);
 
-		let verNum = myObj["version"];
+		    let verNum = myObj["version"];
 
-		let newVer = simpleIncrement(verNum, bumpType);
-		
-		myObj["version"] = newVer;
+		    let newVer = simpleIncrement(verNum, bumpType);
+		    
+		    myObj["version"] = newVer;
 
-		// write to the file
-		writeFile(pathToPackageJSON,
-		          JSON.stringify(myObj, null, 4), function (err) {
-			      if (err) {
-			          console.error(err);
-			          // Error reject
-				  reject(new Error(err));
-			      }
-			      else {
-			          console.log("Write was successful");
-				  // resolve data
-				  resolve(newVer);
-			      }
-		          });
+		    // write to the file
+		    writeFile(pathToPackageJSON,
+		              JSON.stringify(myObj, null, 4), function (err) {
+			              if (err) {
+			                console.error(err);
+			                // Error reject
+				              reject(new Error(err));
+			              }
+			              else {
+			                console.log("Write was successful");
+				              // resolve data
+				              resolve(newVer);
+			              }
+		              });
 	    }
     });
   });
