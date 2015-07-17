@@ -26,6 +26,7 @@ describe("IO", function() {
               var stderr = result.stderr;
               console.log('stdout: ', stdout);
               console.log('stderr: ', stderr);
+              expect(self).to.have.a.property("res", 0);
             })
             .fail(function (err) {
               console.error("ERROR: ",err);
