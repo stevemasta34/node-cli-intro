@@ -6,9 +6,7 @@ var colors = require('colors');
 export var cli = cliArgs([
   { name: "version", type: String, alias: "v", description: "Specific versioning appendage: ie. alpha, beta, charlie"},
   { name: "help", type: Boolean, alias: "h", description: "Print usage instructions" },
-  { name: "bump-patch", type: Boolean, alias: "p", description: "Perform a 'patch' version bump" },
-  { name: "bump-major", type: Boolean, alias: "M", description: "Perform a 'major' version bump" },
-  { name: "bump-minor", type: Boolean, alias: "i", description: "Perform a 'minor' version bump" },
+  { name: "bump", type: Boolean, alias: "p", description: "Perform a version bump of either: major, minor, or patch (defaulting to patch)" },
   { name: "commit", type: Boolean, alias: "c", description: "Commit the local git repository." },
   { name: "message", type: String, alias: "m", description: "Message to supplied to a commit" }
 ]);
@@ -33,4 +31,5 @@ export function print (obj, strColor) {
 
 export function printError (obj) {
   console.error(JSON.stringify(obj).red);
+  return -1;
 };

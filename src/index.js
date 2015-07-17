@@ -14,38 +14,27 @@ export default function doFlow(optionsObj = cli.parse()) {
 	      commit(optionsObj.message)
           .then( (res) => {
             console.log(`
-          git commited successfully with status code: ${res["childProcess"]["exitCode"]}`);
+                        git commited successfully with status code: ${res["childProcess"]["exitCode"]}`);
           })
           .then( () => {
-            print("Hit the second then block.", "green");
-
-            if (optionsObj["bump-major"]) {
-              print(`Decide on "bump-major"`, "cyan");
-              return bumpPackageVersion(packageJsonPath, "major");
-            } else if (optionsObj["bump-minor"]) {
-              print(`Decide on "bump-minor'"`, "cyan");
-              return bumpPackageVersion(packageJsonPath, "minor");
-            } else if (optionsObj["bump-patch"]) {
-              print(`Decide on "bump-patch"`, "cyan");
-              return bumpPackageVersion(packageJsonPath, "patch");
+            if (optionsObj["bump"]) {
+              // print(`Decide on "bump ${optionsObj.bump}"`, "cyan");
+              return bumpPackageVersion(packageJsonPath, optionsObj.bump);
             } else {
               throw "No bump version";
             }
           })
           .then( (verCode) => {
             if (optionsObj.version) {
-              tag(`${verCode}-${optionsObj.version}`, optionsObj.message);
+              return tag(`${verCode}-${optionsObj.version}`, optionsObj.message);
             }
             else {
               print(`No version appendage for tagging ${verCode}`, "cyan");
-              tag(verCode, optionsObj.message);
+              return tag(verCode, optionsObj.message);
             }
-          } )
+          })
           .then( () => commit(optionsObj.message))
-          .then( () => {
-            // print("not really pushing tags. Just a commit.", "green");
-            pushTags();
-          } )
+          .then( () => pushTags() )
           .catch( (err) => {
             printError(err);
           });

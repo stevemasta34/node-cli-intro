@@ -43,7 +43,6 @@ describe("IO", function() {
           .then(function () {
             //
             expect(self).to.have.a.property("res", 0);
-            done();
           });
     });
   });
