@@ -52,7 +52,7 @@ export function commit(commitMessage) {
     exec(topCmd)
       .then(function (result) {
         // resolve the program, because we've hit the succes
-        console.log("Hit the top level success block, in CCL Promise");
+        // console.log("Hit the top level success block, in CCL Promise");
         resolveFunc(result);
       })
       .fail(function (error) {
