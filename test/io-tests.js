@@ -26,7 +26,7 @@ describe("IO", function() {
               var stderr = result.stderr;
               console.log('stdout: ', stdout);
               console.log('stderr: ', stderr);
-              expect(self).to.have.a.property("res", 0);
+            
             })
             .fail(function (err) {
               console.error("ERROR: ",err);
@@ -39,7 +39,11 @@ describe("IO", function() {
           console.log("Error block, pseudo-failure");
           // break the test
           expect(self).to.have.a.property("res", 100);
-        });
+        })
+          .then(function () {
+            //
+            expect(self).to.have.a.property("res", 0);
+          });
     });
   });
 });
