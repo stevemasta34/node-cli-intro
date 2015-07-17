@@ -37,13 +37,14 @@ export default function doFlow(optionsObj = cli.parse()) {
               tag(`${verCode}-${optionsObj.version}`, optionsObj.message);
             }
             else {
+              print(`No version appendage for tagging ${verCode}`, "cyan");
               tag(verCode, optionsObj.message);
             }
           } )
           .then( () => commit(optionsObj.message))
           .then( () => {
-            print("not really pushing tags. Just a commit.", "green");
-            // pushTags();
+            // print("not really pushing tags. Just a commit.", "green");
+            pushTags();
           } )
           .catch( (err) => {
             printError(err);

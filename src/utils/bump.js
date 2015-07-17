@@ -6,7 +6,7 @@ export function simpleIncrement(verNum, bumpType) {
   let splitInd = (bumpType === "major" ? 0 : bumpType === "minor" ? 1 : 2);
 	let theInt = Number(split[ splitInd ]);
   
-	console.log(`Parsed bumptype: ${bumpType}, version num: ${theInt}`);
+	// console.log(`Parsed bumptype: ${bumpType}, version num: ${theInt}`);
 
 	// bump the int
 	theInt += 1;
