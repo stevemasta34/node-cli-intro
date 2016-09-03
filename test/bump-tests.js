@@ -5,9 +5,9 @@ var myIo = require("../lib/io.js");
 var bump = require("../lib/utils/bump.js");
 
 
-describe("Bump", function () {
-  describe("#simpleIncrement", function () {
-    it("tick the version number, 'carrying the zero'", function () {
+describe("Bump", function() {
+  describe("#simpleIncrement", function() {
+    it("tick the version number, 'carrying the zero'", function() {
       console.log("Testing for bump things");
     });
   });

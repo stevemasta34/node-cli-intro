@@ -1,49 +1,50 @@
 {
-    "name": "node-cli-intro",
-    "version": "0.3.8",
-    "private": true,
-    "description": "OS agnostic build tool, written in Javascript for Javascript. Process will be as follows: version bump (according to SemVer's guidelines), build the src, git tag the src repo, push the tags to remote origin, document the release via GitHub release api.",
-    "main": "bin/app-compiled.js",
-    "dependencies": {
-        "child-process-promise": "^1.1.0",
-        "colors": "^1.1.2",
-        "command-line-args": "^0.5.9",
-        "semver": "^5.0.1",
-        "shelljs": "^0.5.1"
-    },
-    "devDependencies": {
-        "babel": "^5.6.14",
-        "chai": "^3.1.0",
-        "chai-as-promised": "^5.1.0",
-        "eslint": "^0.24.1",
-        "fs-promise": "^0.3.1",
-        "mocha": "^2.2.5"
-    },
-    "scripts": {
-        "lint": "eslint ./src/",
-        "build": "npm link",
-        "test": "mocha ./test/",
-        "prebuild": "babel -d ./lib ./src && babel ./bin/app.js --out-file ./bin/app-compiled.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/stevemasta34/node-cli-intro.git"
-    },
-    "keywords": [
-        "cli",
-        "command",
-        "line",
-        "node",
-        "javascript",
-        "es6"
-    ],
-    "author": "Stephen Fox",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/stevemasta34/node-cli-intro/issues"
-    },
-    "bin": {
-        "semver-bump": "bin/app-compiled.js"
-    },
-    "homepage": "https://github.com/stevemasta34/node-cli-intro"
+  "name": "node-cli-intro",
+  "version": "0.3.8",
+  "private": true,
+  "description": "OS agnostic build tool, written in Javascript for Javascript. Process will be as follows: version bump (according to SemVer's guidelines), build the src, git tag the src repo, push the tags to remote origin, document the release via GitHub release api.",
+  "main": "bin/app-compiled.js",
+  "dependencies": {
+    "child-process-promise": "^1.1.0",
+    "colors": "^1.1.2",
+    "command-line-args": "^0.5.9",
+    "semver": "^5.0.1",
+    "shelljs": "^0.5.1"
+  },
+  "devDependencies": {
+    "babel": "^5.6.14",
+    "babel-eslint": "^6.1.2",
+    "chai": "^3.1.0",
+    "chai-as-promised": "^5.1.0",
+    "eslint": "^0.24.1",
+    "fs-promise": "^0.3.1",
+    "mocha": "^2.2.5"
+  },
+  "scripts": {
+    "lint": "eslint ./src/",
+    "build": "npm link",
+    "test": "mocha ./test/",
+    "prebuild": "babel -d ./lib ./src && babel ./bin/app.js --out-file ./bin/app-compiled.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stevemasta34/node-cli-intro.git"
+  },
+  "keywords": [
+    "cli",
+    "command",
+    "line",
+    "node",
+    "javascript",
+    "es6"
+  ],
+  "author": "Stephen Fox",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stevemasta34/node-cli-intro/issues"
+  },
+  "bin": {
+    "semver-bump": "bin/app-compiled.js"
+  },
+  "homepage": "https://github.com/stevemasta34/node-cli-intro"
 }
